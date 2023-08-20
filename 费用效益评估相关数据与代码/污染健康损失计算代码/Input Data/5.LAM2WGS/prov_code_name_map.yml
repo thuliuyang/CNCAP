@@ -1,0 +1,33 @@
+province:
+ - { regionId: 11, regionName: 北京, regionNameE: Beijing }
+ - { regionId: 12, regionName: 天津, regionNameE: Tianjin }
+ - { regionId: 13, regionName: 河北, regionNameE: Hebei }
+ - { regionId: 14, regionName: 山西, regionNameE: Shanxi }
+ - { regionId: 15, regionName: 内蒙, regionNameE: Inner Mongolia }
+ - { regionId: 21, regionName: 辽宁, regionNameE: Liaoning }
+ - { regionId: 22, regionName: 吉林, regionNameE: Jilin }
+ - { regionId: 23, regionName: 黑龙, regionNameE: Heilongjiang }
+ - { regionId: 31, regionName: 上海, regionNameE: Shanghai }
+ - { regionId: 32, regionName: 江苏, regionNameE: Jiangsu }
+ - { regionId: 33, regionName: 浙江, regionNameE: Zhejiang }
+ - { regionId: 34, regionName: 安徽, regionNameE: Anhui }
+ - { regionId: 35, regionName: 福建, regionNameE: Fujian }
+ - { regionId: 36, regionName: 江西, regionNameE: Jiangxi }
+ - { regionId: 37, regionName: 山东, regionNameE: Shandong }
+ - { regionId: 41, regionName: 河南, regionNameE: Henan }
+ - { regionId: 42, regionName: 湖北, regionNameE: Hubei }
+ - { regionId: 43, regionName: 湖南, regionNameE: Hunan }
+ - { regionId: 44, regionName: 广东, regionNameE: Guangdong }
+ - { regionId: 45, regionName: 广西, regionNameE: Guangxi }
+ - { regionId: 46, regionName: 海南, regionNameE: Hainan }
+ - { regionId: 50, regionName: 重庆, regionNameE: Chongqing }
+ - { regionId: 51, regionName: 四川, regionNameE: Sichuan }
+ - { regionId: 52, regionName: 贵州, regionNameE: Guizhou }
+ - { regionId: 53, regionName: 云南, regionNameE: Yunan }
+ - { regionId: 54, regionName: 西藏, regionNameE: Tibet }
+ - { regionId: 61, regionName: 陕西, regionNameE: Shannxi }
+ - { regionId: 62, regionName: 甘肃, regionNameE: Gansu }
+ - { regionId: 63, regionName: 青海, regionNameE: Qinghai }
+ - { regionId: 64, regionName: 宁夏, regionNameE: Ningxia }
+ - { regionId: 65, regionName: 新疆, regionNameE: Xinjiang }
+ - { regionId: 71, regionName: 台湾, regionNameE: Taiwan }
