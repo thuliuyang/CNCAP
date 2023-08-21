@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jan 28 16:31:53 2022
-用于将空气质量模型模拟得到的未来PM2.5浓度与TAP浓度数据进行同化，并结合人口数据计算不同地区的人口暴露。
-@author: DELL
-"""
+#
+# Copyright © 2023 Department of Earth System Science Tsinghua University
+#
+########################################################################
+#
+# Version is 1.0
+#
+# 用于将空气质量模型模拟得到的未来PM2.5浓度与TAP浓度数据进行同化，并结合人口数据计算不同地区的人口暴露。
+#
+########################################################################
+
 
 import numpy as np
 import matplotlib.pyplot as plt
