@@ -1,0 +1,47 @@
+#!/bin/csh -f
+# Current work path that includes gen_wrfcmaq.py
+set work = /data/home/wuruili/0.Model/11.InMAP/wrfcamq2inmap/wrfcmaq2inmap
+# Path to daily WRF outputs
+set wrfpath = /data/home/wuruili/WORK/0.run_wrfcmaq/work/wrf_run/Data/FNL_WRF/all
+# Path to MCIP outputs -- just need DENS variable from daily METCRO3D
+#set mcippath = /data/home/wuruili/WORK/0.run_wrfcmaq/work/wrf_run/Data/OUT/r2016NC/mcip/all/
+set mcippath = /data/home/wuruili/0.Model/4.WRF-CMAQ/ems_install/run/OUTPUT/CMAQ/mcip/
+# Path to output from CMAQ -- need daily concentration files
+#set cmaqpath = /data/home/wuruili/0.Model/0.tool/CMAQv5.1_ori/data/cmaq_combine/pp_3sce_ncep_2017test_v52/daily
+set cmaqpath = /data/home/wuruili/WORK/Research/1.SA/Data/4.cmaqv52/0.pp/pp_3sce_ncep_2017test_v52/daily/
+# Year to process
+set year = 2017
+#filename
+set wrffilename = "wrfout_d01_${year}-02-01_18:00:00"
+# Path to IOAPI utilities for converting and iterating dates
+set iopath = /data/home/wuruili/0.Model/0.tool/lib_cmaq/ioapi-3.1/include 
+# Starting julian date
+set n = 2
+
+#mkdir -f $work/temp
+#mkdir -f $work/daily
+while ($n <= 365 )
+    echo "t1"
+    if ($n < 10) then
+        set jday = "00${n}"
+    else if ($n < 100) then
+        set jday = "0${n}"
+    else
+        set jday = "${n}"
+    endif
+    echo "t2"
+
+    set gday = `$iopath/jul2greg ${year}${jday}`
+    echo "gday"
+    echo $gday
+    set mcip = "${mcippath}/METCRO3D_${year}${jday}"
+    set cmaq = "${cmaqpath}/Combine.Surf.Column.AOD.together.${year}${jday}"
+    set wrfout = ${wrfpath}/wrfout_d01_${year}-`echo $gday | cut -c5-6`-`echo $gday | cut -c7-8`_18:00:00
+    set outfile = $work/daily/wrfcmaq_$gday.ncf
+    echo $gday
+    $work/./gen_wrfcmaq_China.py $wrfout $mcip $cmaq $gday $outfile 12US2
+#    gzip $outfile &
+
+    @ n++
+    echo "Good job!"
+end #while

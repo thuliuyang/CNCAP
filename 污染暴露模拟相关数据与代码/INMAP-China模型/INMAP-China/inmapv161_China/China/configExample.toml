@@ -1,0 +1,153 @@
+# inMAPData is the path to location of baseline meteorology and pollutant data.
+# The path can include environment variables.
+INMAP_ROOT_DIR = "/data/home/wuruili/WORK/11.InMAP/inmap161_China/inmap/"
+InMAPData ="${INMAP_ROOT_DIR}/China/input/inmap_wrfcmaq_2017_Jan-Dec-0202.ncf"
+InMAPRunType = "steady"
+RunId = "test"
+# VariableGridData is the path to the location of the variable-resolution gridded
+# InMAP data, or the location where it should be created if it doesn't already
+# exist. The path can include environment variables.
+VariableGridData = "${INMAP_ROOT_DIR}/China/input/inmapVarGrid.gob"
+# this gob is 172*127*14 cells
+# EmissionsShapefiles are the paths to any emissions shapefiles.
+# Can be elevated or ground level; elevated files need to have columns
+# labeled "height", "diam", "temp", and "velocity" containing stack
+# information in units of m, m, K, and m/s, respectively.
+# Emissions will be allocated from the geometries in the shape file
+# to the InMAP computational grid, but the mapping projection of the
+# shapefile must be the same as the projection InMAP uses.
+# Can include environment variables.
+EmissionsShapefiles = [ 
+	"${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_trans.shp",
+	"${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_agri.shp",
+	"${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_resi.shp",
+]
+# EmissionUnits gives the units that the input emissions are in.
+# Acceptable values are 'tons/year' and 'kg/year'.
+EmissionUnits = "tons/year"
+
+# HTTPAddress is the address for hosting the HTML user interface.
+# If HTTPAddress is `:8080`, then the GUI
+# would be viewed by visiting `localhost:8080` in a web browser.
+# If HTTPport is "", then the web server doesn't run.
+HTTPAddress = " "
+
+# OutputFile specifies the path to the desired output shapefile location. It can
+# include environment variables.
+Outpath = "${INMAP_ROOT_DIR}/China/output/inmap161/"
+OutputFile = "${Outpath}/Inmap_output.shp"
+
+# LogFile specifies the path to the desired logfile location. It can include
+# environment variables. If LogFile is left blank, the logfile will be saved in
+# the same location as the OutputFile.
+LogFile = "logfile_${InMAPRunType}_${RunId}.log"
+
+# OutputVariables specifies which model variables should be included in the
+# output file. Each output variable is defined by the desired name and an
+# expression that can be used to calculate it
+# (in the form VariableName = "Expression"). These expressions can utilize
+# variables built into the model, user-defined variables, and functions.
+# Available functions include:
+# 'exp(x)' which applies the exponetional function e^x.
+# 'log(x)' which applies the natural logarithm function log(e).
+# 'log10(x)' which applies the base-10 logarithm function log10(e).
+# Note: Environment variables can be used in both variable names and expressions.
+[OutputVariables]
+PSO4 = "pSO4"
+PNO3 = "pNO3"
+PNH4 = "pNH4"
+SOA = "SOA"
+pri_PM25 = "PrimaryPM25"
+VOC = "VOC"
+SOx = "SOx"
+NOx = "NOx"
+NH3 = "NH3"
+B_PM25 = "BaselineTotalPM25"
+B_pNH4 = "BaselinePNH4"
+B_pNO3 = "BaselinePNO3"
+B_pSO4 = "BaselinePSO4"
+B_SOA = "BaselineSOA"
+B_SOx = "BaselineSOx"
+B_NOx = "BaselineNOx"
+B_NH3 = "BaselineNH3"
+WindSpeed = "WindSpeed"
+LayerHgt = "LayerHeight"
+SClass = "SClass"
+NH3DryDep = "NH3DryDep"
+SO2DryDep = "SO2DryDep"
+NOxDryDep = "NOxDryDep"
+PMDryDep = "ParticleDryDep"
+SO2WetDep = "SO2WetDep"
+TotalPM25 = "PrimaryPM25 + pNH4 + pSO4 + pNO3 + SOA"
+TotalPopD = "(exp(log(1.078)/10 * TotalPM25) - 1) * TotalPop * AllCause / 100000"
+# VarGrid provides information for specifying the variable resolution grid.
+[VarGrid]
+
+# VariableGridXo and VariableGridYo are the X and Y coordinates of the
+# lower-left corner of the InMAP grid.
+VariableGridXo= -3096000.0
+VariableGridYo= -2286000.0
+
+# VariableGridDx and VariableGridDy are the X and Y edge lengths of grid
+# cells in the outermost nest, in meters.
+VariableGridDx= 36000.0
+VariableGridDy= 36000.0
+
+# Xnests and Ynests specify nesting multiples in the X and Y directions.
+# For instance, if Xnests and Ynests are both [100, 2, 2, 2] and
+# VariableGridDy and VariableGridDx are both 40000, the outermost
+# nest would have 100 grid cells in each direction with 40 km resolution,
+# and there would be three levels of inner nesting, each at double the
+# resolution of the previous nest, with the innermost nest having a grid
+# cell length of 5 km.
+Xnests = [172]
+Ynests = [127]
+# HiResLayers is the number of layers, starting at ground level, to do
+# nesting in. Layers above this will have all grid cells in the lowest
+# spatial resolution.
+HiResLayers= 1
+
+# GridProj gives projection info for the CTM grid in Proj4 or WKT format.
+GridProj= "+proj=lcc +lat_1=25.000000 +lat_2=40.000000 +lat_0=34.000000 +lon_0=110.000000 +x_0=0 +y_0=0 +a=6370000.000000 +b=6370000.000000 +to_meter=1"
+
+# PopDensityThreshold is a limit for people per unit area in a grid cell
+# (units will typically be either people / m^2 or people / degree^2,
+# depending on the spatial projection of the model grid). If
+# the population density in a grid cell is above this level, the cell in question
+# is a candidate for splitting into smaller cells.
+
+PopDensityThreshold= 55
+
+# PopThreshold is a limit for the total number of people in a grid cell.
+# If the total population in a grid cell is above this level, the cell in question
+# is a candidate for splitting into smaller cells.
+PopThreshold= 1000000.0
+
+# PopConcThreshold is the limit for
+# Σ(|ΔConcentration|)*combinedVolume*|ΔPopulation| / {Σ(|totalMass|)*totalPopulation}.
+# See the documentation for PopConcMutator for more information.
+PopConcThreshold= 0.001
+
+# CensusFile is the path to the shapefile holding population information.
+CensusFile = "${INMAP_ROOT_DIR}/China/input/emis/gpw_pop_china_annual_2017.shp"
+# CensusPopColumns is a list of the data fields in CensusFile that should
+# be included as population estimates in the model. They can be population
+# of different demographics or for different population scenarios.
+CensusPopColumns= "TotalPop"
+
+# PopGridColumn is the name of the field in CensusFile that contains the data
+# that should be compared to PopThreshold and PopDensityThreshold when determining
+# if a grid cell should be split. It should typically be one of the fields
+# in CensusPopColumns.
+
+PopGridColumn= "TotalPop"
+
+# MortalityRateFile is the path to the shapefile containing baseline
+# mortality rate data.
+MortalityRateFile = "${INMAP_ROOT_DIR}/China/input/emis/national_mort_rate_2017.shp"
+# MortalityRateColumns maps the names of each input population group to the name
+# of the field in MortalityRateFile that contains its respective baseline
+# mortality rate, in units of deaths per year per 100,000 people. Only mortality
+# rates used in output variable expressions need to be included here.
+[VarGrid.MortalityRateColumns]
+AllCause = "TotalPop"

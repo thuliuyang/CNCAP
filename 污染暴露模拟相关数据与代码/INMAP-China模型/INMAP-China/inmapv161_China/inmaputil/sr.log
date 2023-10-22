@@ -1,0 +1,198 @@
+22d21
+< 	"context"
+25a25
+> 	"path/filepath"
+26a27,29
+> 	"github.com/ctessum/geom"
+> 	"github.com/ctessum/geom/encoding/shp"
+> 	"github.com/kardianos/osext"
+28c31
+< 	"github.com/spatialmodel/inmap/cloud/cloudrpc"
+---
+> 	"github.com/spatialmodel/inmap/science/chem/simplechem"
+32,33c35
+< // StartSR starts the SR matrix creator, getting configuration information from the
+< // global Cfg variable.
+---
+> // RunSR runs the SR matrix creator.
+35c37,39
+< // jobName is a user-specified name for the SR creation job.
+---
+> // VariableGridData is the path to the location of the variable-resolution gridded
+> // InMAP data, or the location where it should be created if it doesn't already
+> // exist.
+37c41
+< // cmds is a list of InMAP subcommands for the individual simulations.
+---
+> // InMAPData is the path to location of baseline meteorology and pollutant data.
+39c43,44
+< // memoryGB is the RAM required for each simulation, in GB.
+---
+> // LogDir is the directory that log files should be stored in when creating
+> // a source-receptor matrix.
+41,42c46,47
+< // VariableGridData is the path to the location of the variable-resolution gridded
+< // InMAP data.
+---
+> // OutputFile is the path where the output file is or should be created
+> // when creating a source-receptor matrix.
+45a51,52
+> // configFile give the path to the configuration file.
+> //
+49,53c56,57
+< //
+< // client is a client of the cluster that will run the simulations.
+< func StartSR(ctx context.Context, jobName string, cmds []string, memoryGB int32, VariableGridData string, VarGrid *inmap.VarGridConfig, begin, end int, layers []int, client cloudrpc.CloudRPCClient, cfg *Cfg) error {
+< 	outChan := outChan()
+< 	varGridReader, err := os.Open(maybeDownload(ctx, VariableGridData, outChan))
+---
+> func RunSR(VariableGridData, InMAPData, LogDir, OutputFile string, VarGrid *inmap.VarGridConfig, configFile string, begin, end int, layers []int) error {
+> 	nodes, err := sr.PBSNodes()
+55c59,64
+< 		return fmt.Errorf("starting SR matrix---can't open variable grid data file: %v", err)
+---
+> 		log.Printf("Problem reading $PBS_NODEFILE: %v. Continuing on local machine.", err)
+> 	}
+> 
+> 	command, err := osext.Executable()
+> 	if err != nil {
+> 		return err
+57c66,69
+< 	sr, err := sr.NewSR(varGridReader, VarGrid, client)
+---
+> 	command = fmt.Sprintf("%s  worker --config=%s --rpcport=%s", command, configFile, sr.RPCPort)
+> 
+> 	sr, err := sr.NewSR(VariableGridData, InMAPData, command,
+> 		LogDir, VarGrid, nodes)
+61c73,74
+< 	if err = sr.Start(ctx, jobName, layers, begin, end, cfg.Root, cfg.Viper, cmds, cfg.InputFiles(), memoryGB); err != nil {
+---
+> 
+> 	if err = sr.Run(OutputFile, layers, begin, end); err != nil {
+63a77
+> 
+67,69c81
+< // SaveSR saves the SR matrix results to an output file.
+< //
+< // jobName is a user-specified name for the SR creation job.
+---
+> // NewWorker starts a new worker.
+72c84,85
+< // InMAP data.
+---
+> // InMAP data, or the location where it should be created if it doesn't already
+> // exist.
+74,75c87
+< // OutputFile is the path where the output file is or should be created
+< // when creating a source-receptor matrix.
+---
+> // InMAPData is the path to location of baseline meteorology and pollutant data.
+78,85c90,91
+< //
+< // begin and end specify the beginning and end grid indices to save.
+< //
+< // layers specifies which vertical layers to save.
+< //
+< // client is a client of the cluster that will run the simulations.
+< func SaveSR(ctx context.Context, jobName, OutputFile string, VariableGridData string, VarGrid *inmap.VarGridConfig, begin, end int, layers []int, client cloudrpc.CloudRPCClient) error {
+< 	varGridReader, err := os.Open(VariableGridData)
+---
+> func NewWorker(VariableGridData, InMAPData string, VarGrid *inmap.VarGridConfig) (*sr.Worker, error) {
+> 	r, err := os.Open(VariableGridData)
+87c93
+< 		return fmt.Errorf("saving SR matrix---can't open variable grid data file: %v", err)
+---
+> 		return nil, fmt.Errorf("problem opening file to load VariableGridData: %v", err)
+89,100c95,99
+< 	sr, err := sr.NewSR(varGridReader, VarGrid, client)
+< 	if err != nil {
+< 		return err
+< 	}
+< 	return sr.Save(ctx, OutputFile, jobName, layers, begin, end)
+< }
+< 
+< // CleanSR cleans up remote data created during the SR matrix creation simulations.
+< func CleanSR(ctx context.Context, jobName, VariableGridData string, VarGrid *inmap.VarGridConfig, begin, end int, layers []int, client cloudrpc.CloudRPCClient) error {
+< 	varGridReader, err := os.Open(VariableGridData)
+< 	if err != nil {
+< 		return fmt.Errorf("saving SR matrix---can't open variable grid data file: %v", err)
+---
+> 	var m simplechem.Mechanism
+> 	d := &inmap.InMAP{
+> 		InitFuncs: []inmap.DomainManipulator{
+> 			inmap.Load(r, VarGrid, nil, m),
+> 		},
+102,104c101,102
+< 	sr, err := sr.NewSR(varGridReader, VarGrid, client)
+< 	if err != nil {
+< 		return err
+---
+> 	if err = d.Init(); err != nil {
+> 		return nil, err
+106c104,106
+< 	return sr.Clean(ctx, jobName, layers, begin, end)
+---
+> 
+> 	worker := sr.NewWorker(VarGrid, InMAPData, d.GetGeometry(0, false))
+> 	return worker, nil
+112,113c112
+< // results specified by outputVaraibles in OutputFile.
+< // EmissionUnits specifies the units
+---
+> // results in OutputFile. EmissionUnits specifies the units
+115c114
+< func SRPredict(EmissionUnits, SROutputFile, OutputFile string, outputVariables map[string]string, EmissionsShapefiles []string, VarGrid *inmap.VarGridConfig) error {
+---
+> func SRPredict(EmissionUnits, SROutputFile, OutputFile string, EmissionsShapefiles []string, VarGrid *inmap.VarGridConfig) error {
+148,149c147,149
+< 	if err = r.SetConcentrations(conc); err != nil {
+< 		return err
+---
+> 	type rec struct {
+> 		geom.Polygon
+> 		PNH4, PNO3, PSO4, SOA, PrimaryPM25, TotalPM25 float64
+152,158c152,153
+< 	var upload uploader
+< 	o := upload.maybeUpload(OutputFile)
+< 	if upload.err != nil {
+< 		return upload.err
+< 	}
+< 
+< 	if err = r.Output(o, outputVariables, nil, vgsr); err != nil {
+---
+> 	o, err := shp.NewEncoder(OutputFile, rec{})
+> 	if err != nil {
+162,163c157,183
+< 	if err := upload.uploadOutput(nil); err != nil {
+< 		return err
+---
+> 	g := r.Geometry()
+> 
+> 	for i, tpm := range conc.TotalPM25() {
+> 		r := rec{
+> 			Polygon:     g[i].(geom.Polygon),
+> 			PNH4:        conc.PNH4[i],
+> 			PNO3:        conc.PNO3[i],
+> 			PSO4:        conc.PSO4[i],
+> 			PrimaryPM25: conc.PrimaryPM25[i],
+> 			SOA:         conc.SOA[i],
+> 			TotalPM25:   tpm,
+> 		}
+> 		err = o.Encode(r)
+> 		if err != nil {
+> 			return err
+> 		}
+> 	}
+> 	o.Close()
+> 	// Projection definition. This may need to be changed for a different
+> 	// spatial domain.
+> 	// TODO: Make this settable by the user, or at least check to make sure it
+> 	// matches the InMAPProj configuration variable.
+> 	const proj4 = `PROJCS["Lambert_Conformal_Conic",GEOGCS["GCS_unnamed ellipse",DATUM["D_unknown",SPHEROID["Unknown",6370997,0]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Lambert_Conformal_Conic"],PARAMETER["standard_parallel_1",33],PARAMETER["standard_parallel_2",45],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-97],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["Meter",1]]`
+> 	// Create .prj file
+> 	f, err = os.Create(OutputFile[0:len(OutputFile)-len(filepath.Ext(OutputFile))] + ".prj")
+> 	if err != nil {
+> 		return fmt.Errorf("error creating output prj file: %v", err)
+164a185,186
+> 	fmt.Fprint(f, proj4)
+> 	f.Close()

@@ -1,0 +1,9 @@
+! coords --line:  name; type, P-alpha, P-beta, P-gamma, xcent, ycent
+‘36CONUS1'
+2, 25.00, 40.D0,110.D0,110.D0, 34.D0
+' '  !  end coords.  grids:  name; xorig,yorig,xcell,ycell,ncols,nrows,nthik
+’36China’, ! 36km continential
+‘36CONUS1', -3096000.0, -2286000.0, 36000.0, 36000.0, 172, 127, 1
+'WRF_36_CONUS', ! WRF grid on same projection as 36China
+'12CONUS1', -3204000.0, -2394000.0, 36000.0, 36000.0, 178, 133, 1
+'' '  !  end grids.'

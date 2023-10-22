@@ -1,0 +1,36 @@
+InMAPData= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/inmapData_GEOSChem.ncf"
+
+OutputFile= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/xxx.shp"
+
+EmissionUnits= "tons/year"
+
+[OutputVariables]
+WindSpeed= "WindSpeed"
+
+
+[VarGrid]
+GridProj= "+proj=longlat"
+
+
+[Preproc]
+CTMType= "GEOS-Chem"
+
+StartDate= "20130102"
+EndDate= "20130104"
+CtmGridXo= -2004000.0
+CtmGridYo= -540000.0
+CtmGridDx= 12000.0
+CtmGridDy= 12000.0
+
+[Preproc.GEOSChem]
+GEOSA1= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/GEOSFP.[DATE].A1.2x25.nc"
+GEOSA3Cld= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/GEOSFP.[DATE].A3cld.2x25.nc"
+GEOSA3Dyn= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/GEOSFP.[DATE].A3dyn.2x25.nc"
+GEOSI3= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/GEOSFP.[DATE].I3.2x25.nc"
+GEOSA3MstE= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/GEOSFP.[DATE].A3mstE.2x25.nc"
+GEOSChem= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/gc_output.[DATE].nc"
+VegTypeGlobal= "${INMAP_ROOT_DIR}/cmd/inmap/testdata/preproc/vegtype.global.txt"
+Dash= true
+ChemRecordInterval= "3h"
+ChemFileInterval= "3h"
+NoChemHourIndex= true

@@ -1,0 +1,8 @@
+51c51
+< 		Version:  1.6.0,
+---
+> 		Version:  inmap.Version,
+108c108
+< 				js.Args = append(js.Args, fmt.Sprintf("--%s", f.Name))
+---
+> 				js.Args = append(js.Args, fmt.Sprintf("--%s", f.Name), "true")

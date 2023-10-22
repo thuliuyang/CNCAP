@@ -1,0 +1,123 @@
+32d31
+< 
+37d35
+< 	"github.com/spf13/cast"
+217c215
+< 				maybeDownload(ctx, os.ExpandEnv(cfg.GetString("Preproc.WRFChem.WRFOut")), outChan),
+---
+> 				maybeDownload(ctx, os.ExpandEnv(cfg.GetString("Preproc.WRFCmaq.WRFOut")), outChan),
+241c239
+<         cfg.srCmd = &cobra.Command{
+---
+> 	var srCmd = &cobra.Command{
+349,350c347
+< 	// srPredictCmd is a command that makes predictions using the SR matrix.
+< 	cfg.srPredictCmd = &cobra.Command{
+---
+> 	srPredictCmd = &cobra.Command{
+391a389
+> 	
+440c438
+< 			defaultVal: false,
+---
+> 			defaultVal: true,
+472c470
+< 			defaultVal: -4000.0,
+---
+> 			defaultVal: -3096000.0,
+480c478
+< 			defaultVal: -4000.0,
+---
+> 			defaultVal: -2286000.0,
+490c488
+< 			defaultVal: 4000.0,
+---
+> 			defaultVal: 36000.0,
+500c498
+< 			defaultVal: 4000.0,
+---
+> 			defaultVal: 36000.0,
+507c505
+< 			defaultVal: []int{2, 2, 2},
+---
+> 			defaultVal: []int{172},
+514c512
+< 			defaultVal: []int{2, 2, 2},
+---
+> 			defaultVal: []int{127},
+521c519
+< 			defaultVal: "+proj=lcc +lat_1=33.000000 +lat_2=45.000000 +lat_0=40.000000 +lon_0=-97.000000 +x_0=0 +y_0=0 +a=6370997.000000 +b=6370997.000000 +to_meter=1",
+---
+> 			defaultVal: "+proj=lcc +lat_1=25.000000 +lat_2=40.000000 +lat_0=34.000000 +lon_0=110.000000 +x_0=0 +y_0=0 +a=6370000.000000 +b=6370000.000000 +to_meter=1",
+541c539
+< 			defaultVal: 0.0055,
+---
+> 			defaultVal: 55,
+551c549
+< 			defaultVal: 40000.0,
+---
+> 			defaultVal: 1000000.0,
+561c559
+< 			defaultVal: 0.000000001,
+---
+> 			defaultVal: 0.001,
+568c566
+< 			defaultVal:  "${INMAP_ROOT_DIR}/cmd/inmap/testdata/testPopulation.shp",
+---
+> 			defaultVal:  "${INMAP_ROOT_DIR}/China/input/emis/gpw_pop_china_annual_2017.shp",
+578c576
+< 			defaultVal: []string{"TotalPop", "WhiteNoLat", "Black", "Native", "Asian", "Latino"},
+---
+> 			defaultVal: []string{"TotalPop"},
+596c594
+< 			defaultVal:  "${INMAP_ROOT_DIR}/cmd/inmap/testdata/testMortalityRate.shp",
+---
+> 			defaultVal:  "${INMAP_ROOT_DIR}/China/input/emis/national_mort_rate_2017.shp",
+610,614d607
+< 				"WhNoLMort":  "WhiteNoLat",
+< 				"BlackMort":  "Black",
+< 				"NativeMort": "Native",
+< 				"AsianMort":  "Asian",
+< 				"LatinoMort": "Latino",
+623c616
+< 			defaultVal:  "${INMAP_ROOT_DIR}/cmd/inmap/testdata/testInMAPInputData.ncf",
+---
+> 			defaultVal:  "${INMAP_ROOT_DIR}/China/input/inmap_wrfcmaq_2017_Jan-Dec-0202.ncf",
+633c626
+< 			defaultVal:  "${INMAP_ROOT_DIR}/cmd/inmap/testdata/inmapVarGrid.gob",
+---
+> 			defaultVal:  "${INMAP_ROOT_DIR}/China/input/inmapVarGrid.gob",
+648c641
+< 			defaultVal:  []string{"${INMAP_ROOT_DIR}/cmd/inmap/testdata/testEmis.shp"},
+---
+> 			defaultVal:  []string{"${INMAP_ROOT_DIR}/China/input/emis/20191217/elevated_power_base.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_trans.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_agri.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_resi.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_indus_surface_layer1.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_indus_elevated_layer2.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_indus_elevated_layer3.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_nocoalpower_layer1.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_nocoalpower_layer2.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_nocoalpower_layer3.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_nocoalpower_layer4.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_nocoalpower_layer5.shp","${INMAP_ROOT_DIR}/China/input/emis/20191217/meic_ground_annual_2017_nocoalpower_layer6.shp"},
+692a686,710
+> 				"pNH4":"pNH4",
+> 				"pSO4":"pSO4",
+> 				"pNO3":"pNO3",
+> 				"SOA":"SOA",
+> 				"pri_PM25":"PrimaryPM25",
+> 				"VOC":"VOC",
+> 				"SOx":"SOx",
+> 				"NOx":"NOx",
+> 				"NH3":"NH3",
+>                                 "B_PM25":"BaselineTotalPM25",
+>                                 "B_pNH4":"BaselinePNH4",
+> 				"B_pNO3":"BaselinePNO3",
+> 				"B_pSO4":"BaselinePSO4",
+> 				"B_SOA":"BaselineSOA",
+> 				"B_SOx":"BaselineSOx",
+> 				"B_NOx":"BaselineNOx",
+> 				"B_NH3":"BaselineNH3",
+> 				"WindSpeed":"WindSpeed",
+> 				"LayerHgt":"LayerHeight",
+> 				"SClass":"SClass",
+> 				"NH3DryDep":"NH3DryDep",
+> 				"SO2DryDep":"SO2DryDep",
+> 				"NOxDryDep":"NOxDryDep",
+> 				"PMDryDep":"ParticleDryDep",
+> 				"SO2WetDep":"SO2WetDep",
+711c729
+< 			defaultVal:   "${INMAP_ROOT_DIR}/cmd/inmap/testdata/output_${InMAPRunType}.shp",
+---
+> 			defaultVal:   "${INMAP_ROOT_DIR}/China/output/output_${InMAPRunType}.shp",
