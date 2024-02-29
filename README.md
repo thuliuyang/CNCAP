@@ -1,6 +1,8 @@
 # 碳中和与清洁空气协同科学评估与决策支持平台（CNCAP）数据代码库
 本数据代码库用于发布与碳中和与清洁空气协同科学评估与决策支持平台相关的数据与代码。
 
+[![Page Views Count](https://badges.toozhao.com/badges/01HQS7C7MK4H4A4E86QXSV2NA3/green.svg)](https://badges.toozhao.com/stats/01HQS7C7MK4H4A4E86QXSV2NA3 "Get your own page views count badge on badges.toozhao.com")
+
 **目前已发布：**
 1. CNCAP团队使用的WRF-CMAQ模型版本信息及参数配置
 2. 未来情景下PM2.5浓度数据
